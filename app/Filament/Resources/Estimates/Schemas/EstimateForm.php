@@ -18,7 +18,7 @@ class EstimateForm
             // CUSTOMER
             Select::make('customer_id')
                 ->label('Customer')
-                ->options(fn () => Customer::orderByDesc('id')->pluck('name', 'id')->toArray())
+                ->options(fn() => Customer::orderByDesc('id')->pluck('name', 'id')->toArray())
                 ->required()
                 ->searchable()
                 ->preload()
@@ -77,7 +77,7 @@ class EstimateForm
 
                     Select::make('product_id')
                         ->label('Product')
-                        ->options(fn () => Product::orderByDesc('id')->pluck('name', 'id')->toArray())
+                        ->options(fn() => Product::orderByDesc('id')->pluck('name', 'id')->toArray())
                         ->searchable()
                         ->preload()
                         ->columnSpan(2)
