@@ -43,8 +43,6 @@ class AgentResource extends Resource
     {
         return [
             'index' => ListAgents::route('/'),
-            'create' => CreateAgent::route('/create'),
-            'edit' => EditAgent::route('/{record}/edit'),
         ];
     }
 }

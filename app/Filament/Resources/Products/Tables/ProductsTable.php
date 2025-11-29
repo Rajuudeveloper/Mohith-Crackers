@@ -4,10 +4,11 @@ namespace App\Filament\Resources\Products\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\DeleteAction;
 use Filament\Tables\Table;
 
 class ProductsTable
@@ -18,35 +19,55 @@ class ProductsTable
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
+
                 TextColumn::make('uom_name')
                     ->searchable(),
+
                 TextColumn::make('price')
                     ->money()
                     ->sortable(),
+
                 TextColumn::make('opening_stock')
                     ->numeric()
                     ->sortable(),
+
                 ImageColumn::make('image'),
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+
+            // ✅ EDIT & DELETE IN MODAL
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->modalHeading('Edit Product')
+                    ->modalSubmitActionLabel('Update'),
+
                 DeleteAction::make(),
             ])
+
+            // ✅ CREATE IN MODAL (TOP BUTTON)
+            ->headerActions([
+                CreateAction::make()
+                    ->modalHeading('Create Product')
+                    ->modalSubmitActionLabel('Save'),
+            ])
+
+            // ✅ BULK DELETE
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+
+            // ✅ DEFAULT SORT
+            ->defaultSort('id', 'desc');
     }
 }

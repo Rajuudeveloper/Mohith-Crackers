@@ -4,9 +4,10 @@ namespace App\Filament\Resources\Vendors\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\DeleteAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class VendorsTable
@@ -17,27 +18,35 @@ class VendorsTable
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
+
                 TextColumn::make('mobile')
                     ->searchable(),
+
                 TextColumn::make('email')
-                    ->label('Email address')
                     ->searchable(),
+
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
-            ->filters([
-                //
-            ])
+
+            // ✅ ROW ACTIONS → OPEN IN MODAL
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->modalHeading('Edit Vendor')
+                    ->modalSubmitActionLabel('Update'),
+
                 DeleteAction::make(),
             ])
+
+            // ✅ TOP BAR ACTION → CREATE MODAL
+            ->headerActions([
+                CreateAction::make()
+                    ->modalHeading('Create Vendor')
+                    ->modalSubmitActionLabel('Save'),
+            ])
+
+            // ✅ BULK DELETE
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

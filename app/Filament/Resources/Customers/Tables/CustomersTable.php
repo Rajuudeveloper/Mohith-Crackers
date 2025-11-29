@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Customers\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
@@ -17,33 +18,54 @@ class CustomersTable
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('agent.name')->label('Agent')->sortable()->searchable(),
+
+                TextColumn::make('agent.name')
+                    ->label('Agent')
+                    ->sortable()
+                    ->searchable(),
+
                 TextColumn::make('mobile')
                     ->searchable(),
+
                 TextColumn::make('email')
                     ->label('Email address')
                     ->searchable(),
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+
+            // ✅ ROW ACTIONS → OPEN IN MODAL
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->modalHeading('Edit Customer')
+                    ->modalSubmitActionLabel('Update'),
+
                 DeleteAction::make(),
             ])
+
+            // ✅ TOP BAR ACTION → CREATE MODAL
+            ->headerActions([
+                CreateAction::make()
+                    ->modalHeading('Create Customer')
+                    ->modalSubmitActionLabel('Save'),
+            ])
+
+            // ✅ BULK DELETE
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
             ])
+
+            // ✅ DEFAULT SORT
             ->defaultSort('id', 'desc');
     }
 }
