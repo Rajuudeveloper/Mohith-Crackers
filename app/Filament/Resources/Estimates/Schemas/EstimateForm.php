@@ -36,10 +36,9 @@ class EstimateForm
                 ->relationship('items')
                 ->label('Line Items')
                 ->columnSpanFull()
-                ->reactive() // important: react to any change in items
+                ->live(debounce: 500) // Changed from reactive() to live() with debounce
                 // when anything inside items changes (add/remove/edit), recalc totals
                 ->afterStateUpdated(function ($state, $set, $get) {
-                    // $state is the array of items
                     $subTotal = 0;
 
                     if (is_array($state)) {
@@ -81,7 +80,7 @@ class EstimateForm
                         ->searchable()
                         ->preload()
                         ->columnSpan(2)
-                        ->reactive()
+                        ->live(debounce: 500) // Changed from reactive() to live()
                         ->afterStateUpdated(function ($state, $set, $get) {
                             if (! $state) {
                                 $set('uom_name', '');
@@ -105,38 +104,44 @@ class EstimateForm
                         ->label('UOM')
                         ->readOnly(),
 
-                    // QTY
+                    // QTY - FIXED VERSION
                     TextInput::make('qty')
                         ->label('Qty')
                         ->numeric()
                         ->default(1)
                         ->minValue(1)
-                        ->reactive()
+                        ->live(debounce: 500) // Changed from reactive() to live()
                         ->afterStateUpdated(function ($state, $set, $get) {
                             $qty = (float) ($state ?? 0);
                             $price = (float) ($get('price') ?? 0);
                             $lineTotal = round($qty * $price, 2);
                             $set('total', number_format($lineTotal, 2, '.', ''));
-                        }),
+                        })
+                        ->extraInputAttributes([
+                            'inputmode' => 'decimal',
+                        ]),
 
-                    // PRICE
+                    // PRICE - FIXED VERSION
                     TextInput::make('price')
                         ->numeric()
                         ->default(0)
                         ->minValue(0)
-                        ->reactive()
+                        ->step(0.01)
+                        ->live(debounce: 500) // Changed from reactive() to live()
                         ->afterStateUpdated(function ($state, $set, $get) {
                             $price = (float) ($state ?? 0);
                             $qty = (float) ($get('qty') ?? 0);
                             $lineTotal = round($qty * $price, 2);
                             $set('total', number_format($lineTotal, 2, '.', ''));
-                        }),
+                        })
+                        ->extraInputAttributes([
+                            'inputmode' => 'decimal',
+                        ]),
 
                     // TOTAL (readonly but dehydrated so it saves)
                     TextInput::make('total')
                         ->label('Total')
                         ->readOnly()
-                        ->reactive()
                         ->dehydrated(),
                 ])
                 ->columns(6)
@@ -148,7 +153,6 @@ class EstimateForm
             TextInput::make('sub_total')
                 ->label('Sub Total')
                 ->readOnly()
-                ->reactive()
                 ->dehydrated()
                 ->default(0)
                 ->columnSpanFull(),
@@ -158,20 +162,23 @@ class EstimateForm
                 ->label('Tax (Amount)')
                 ->numeric()
                 ->default(0)
-                ->reactive()
+                ->step(0.01)
+                ->live(debounce: 500) // Changed from reactive() to live()
                 ->afterStateUpdated(function ($state, $set) {
                     // user touched tax => lock automatic recalculation
                     $set('tax_locked', true);
-                    // Ensure grand total recalculation after manual tax change:
-                    // (we'll trigger recompute by reading existing sub_total & packing below)
                 })
+                ->extraInputAttributes([
+                    'inputmode' => 'decimal',
+                ])
                 ->columnSpanFull(),
 
             TextInput::make('packing_charges')
                 ->label('Packing Charges')
                 ->numeric()
                 ->default(0)
-                ->reactive()
+                ->step(0.01)
+                ->live(debounce: 500) // Changed from reactive() to live()
                 ->afterStateUpdated(function ($state, $set, $get) {
                     // Recompute grand total when packing changes
                     $sub = (float) ($get('sub_total') ?? 0);
@@ -180,13 +187,15 @@ class EstimateForm
                     $grand = round($sub + $tax + $pack, 2);
                     $set('grand_total', number_format($grand, 2, '.', ''));
                 })
+                ->extraInputAttributes([
+                    'inputmode' => 'decimal',
+                ])
                 ->columnSpanFull(),
 
             TextInput::make('grand_total')
                 ->label('Grand Total')
                 ->readOnly()
                 ->dehydrated()
-                ->reactive()
                 ->default(0)
                 ->columnSpanFull(),
         ]);

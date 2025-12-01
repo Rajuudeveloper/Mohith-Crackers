@@ -14,6 +14,8 @@ class Estimate extends Model
         'tax',
         'packing_charges',
         'grand_total',
+        'estimate_date',
+        'estimate_no',
     ];
 
     protected $casts = [
