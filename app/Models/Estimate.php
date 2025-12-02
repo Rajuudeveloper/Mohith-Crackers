@@ -42,4 +42,14 @@ class Estimate extends Model
         $this->sub_total = $subTotal;
         $this->grand_total = $subTotal + $this->tax + $this->packing_charges;
     }
+    protected static function booted()
+    {
+        static::creating(function ($estimate) {
+            if (! $estimate->estimate_no) {
+                $last = self::latest('id')->first();
+                $number = $last ? ((int) str_replace('ES-', '', $last->estimate_no)) + 1 : 1;
+                $estimate->estimate_no = 'ES-' . $number;
+            }
+        });
+    }
 }

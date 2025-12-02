@@ -4,10 +4,13 @@ namespace App\Filament\Resources\Estimates\Schemas;
 
 use App\Models\Customer;
 use App\Models\Product;
+use App\Models\Estimate;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Repeater;
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\DatePicker;
+use Carbon\Carbon;
 
 class EstimateForm
 {
@@ -15,10 +18,28 @@ class EstimateForm
     {
         return $schema->components([
 
+            // ESTIMATE NO (auto-generate)
+            TextInput::make('estimate_no')
+                ->label('Estimate No')
+                ->default(function () {
+                    // Get last estimate number
+                    $last = Estimate::latest('id')->first();
+                    $number = $last ? ((int) str_replace('ES-', '', $last->estimate_no)) + 1 : 1;
+                    return 'ES-' . $number;
+                })
+                ->disabled(false)      // must be enabled to submit
+                ->dehydrated(true),
+
+            // ESTIMATE DATE (default today)
+            DatePicker::make('estimate_date')
+                ->label('Estimate Date')
+                ->default(Carbon::today())
+                ->required(),
+
             // CUSTOMER
             Select::make('customer_id')
                 ->label('Customer')
-                ->options(fn() => Customer::orderByDesc('id')->pluck('name', 'id')->toArray())
+                ->options(Customer::orderBy('id', 'desc')->pluck('name', 'id')->toArray())
                 ->required()
                 ->searchable()
                 ->preload()
@@ -76,7 +97,7 @@ class EstimateForm
 
                     Select::make('product_id')
                         ->label('Product')
-                        ->options(fn() => Product::orderByDesc('id')->pluck('name', 'id')->toArray())
+                        ->options(Product::orderBy('id', 'desc')->pluck('name', 'id')->toArray())
                         ->searchable()
                         ->preload()
                         ->columnSpan(2)
@@ -164,9 +185,17 @@ class EstimateForm
                 ->default(0)
                 ->step(0.01)
                 ->live(debounce: 500) // Changed from reactive() to live()
-                ->afterStateUpdated(function ($state, $set) {
+                ->afterStateUpdated(function ($state, $set, $get) {
                     // user touched tax => lock automatic recalculation
-                    $set('tax_locked', true);
+                    // $set('tax_locked', true);
+
+                    // Recompute grand total when packing changes
+
+                    $tax = (float) ($state ?? 0);
+                    $sub = (float) ($get('sub_total') ?? 0);
+                    $pack = (float) ($get('packing_charges') ?? 0);
+                    $grand = round($sub + $tax + $pack, 2);
+                    $set('grand_total', number_format($grand, 2, '.', ''));
                 })
                 ->extraInputAttributes([
                     'inputmode' => 'decimal',

@@ -15,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class EstimateResource extends Resource
 {
@@ -27,6 +28,11 @@ class EstimateResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return EstimateForm::configure($schema);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with('items');
     }
 
     public static function infolist(Schema $schema): Schema
