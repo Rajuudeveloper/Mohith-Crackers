@@ -17,6 +17,11 @@ class ProductForm
                     ->required(),
                 TextInput::make('uom_name')
                     ->default(null),
+                TextInput::make('packs_per_case')
+                    ->label('Packs Per Case')
+                    ->numeric()
+                    ->required()
+                    ->minValue(1),
                 TextInput::make('price')
                     ->numeric()
                     ->default(null)

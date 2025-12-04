@@ -16,6 +16,8 @@ class Estimate extends Model
         'grand_total',
         'estimate_date',
         'estimate_no',
+        'is_round_off',
+        'round_off_amount'
     ];
 
     protected $casts = [

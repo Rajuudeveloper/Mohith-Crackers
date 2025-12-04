@@ -58,7 +58,7 @@ class EstimateResource extends Resource
             'index' => ListEstimates::route('/'),
             'create' => CreateEstimate::route('/create'),
             'view' => ViewEstimate::route('/{record}'),
-            'edit' => EditEstimate::route('/{record}/edit'),
+            // 'edit' => EditEstimate::route('/{record}/edit'),
         ];
     }
 }

@@ -13,5 +13,6 @@ class Product extends Model
         'opening_stock',
         'description',
         'image',
+        'packs_per_case',
     ];
 }

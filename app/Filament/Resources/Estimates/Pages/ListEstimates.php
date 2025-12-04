@@ -10,10 +10,18 @@ class ListEstimates extends ListRecords
 {
     protected static string $resource = EstimateResource::class;
 
+    // protected function getHeaderActions(): array
+    // {
+    //     return [
+    //         CreateAction::make(),
+    //     ];
+    // }
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            \Filament\Actions\Action::make('create')
+                ->label('Add Estimate')
+                ->url(route('estimates.custom.create')),
         ];
     }
 }

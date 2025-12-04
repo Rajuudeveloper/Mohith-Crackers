@@ -11,7 +11,11 @@ class EstimateItem extends Model
         'estimate_id',
         'product_id',
         'uom_name',
+        'cases',
+        'packs',
         'qty',
+        'tax_id',
+        'tax_amt',
         'price',
         'total',
     ];
