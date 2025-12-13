@@ -31,6 +31,7 @@ class AgentForm
                 Select::make('cr_dr')
                     ->options(['Cr' => 'Cr', 'Dr' => 'Dr'])
                     ->default('Dr')
+                     ->helperText('DR: Agent needs to pay you | CR: You need to pay the agent')
                     ->required(),
                 Textarea::make('address')
                     ->default(null)
