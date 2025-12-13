@@ -16,7 +16,11 @@ return new class extends Migration
             $table->foreignId('estimate_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->string('uom_name')->nullable();
+            $table->unsignedInteger('cases')->default(0);
+            $table->unsignedInteger('packs')->default(0);
             $table->integer('qty')->default(1);
+            $table->unsignedTinyInteger('tax_id')->default(0);
+            $table->decimal('tax_amt', 15, 2)->default(0);
             $table->decimal('price', 15, 2)->default(0);
             $table->decimal('total', 15, 2)->default(0);
             $table->timestamps();

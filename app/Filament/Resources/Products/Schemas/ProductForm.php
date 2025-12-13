@@ -16,6 +16,7 @@ class ProductForm
                 TextInput::make('name')
                     ->required(),
                 TextInput::make('uom_name')
+                    ->required()
                     ->default(null),
                 TextInput::make('packs_per_case')
                     ->label('Packs Per Case')
@@ -25,7 +26,10 @@ class ProductForm
                 TextInput::make('price')
                     ->numeric()
                     ->default(null)
-                    ->prefix('$'),
+                    ->prefix('₹'),
+                TextInput::make('hsn_code')
+                    ->label('HSN Code')
+                    ->default(null),
                 TextInput::make('opening_stock')
                     ->numeric()
                     ->default(null),

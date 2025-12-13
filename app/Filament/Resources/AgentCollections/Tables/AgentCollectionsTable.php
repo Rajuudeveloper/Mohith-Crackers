@@ -9,6 +9,8 @@ use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\CreateAction;
 
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\DateColumn;
@@ -43,7 +45,16 @@ class AgentCollectionsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->modalHeading('Edit Agent Collection')
+                    ->modalSubmitActionLabel('Update'),
+
+                DeleteAction::make(),
+            ])
+            ->headerActions([
+                CreateAction::make()
+                    ->modalHeading('Create Agent Collection')
+                    ->modalSubmitActionLabel('Save'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

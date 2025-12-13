@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->string('mobile')->nullable();
             $table->string('email')->nullable();
             $table->text('address')->nullable();
+            $table->string('gst_no', 20)->nullable(); 
             $table->timestamps();
         });
     }

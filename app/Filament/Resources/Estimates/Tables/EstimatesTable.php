@@ -11,6 +11,11 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Filters\SelectFilter;
+use App\Models\Agent;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Filament\Actions\ActionGroup;
 
 class EstimatesTable
 {
@@ -24,7 +29,7 @@ class EstimatesTable
 
                 TextColumn::make('estimate_date')
                     ->label('Date')
-                    ->date('Y-m-d')
+                    ->date('d-m-Y')
                     ->sortable(),
 
                 TextColumn::make('customer.name')
@@ -40,7 +45,8 @@ class EstimatesTable
                 TextColumn::make('grand_total')
                     ->label('Grand Total')
                     ->money('inr')
-                    ->sortable(),
+                    ->sortable()
+                    ->summarize(Sum::make()),
             ])
 
             ->filters([
@@ -51,23 +57,43 @@ class EstimatesTable
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when($data['from'], fn ($q) =>
+                            ->when(
+                                $data['from'],
+                                fn($q) =>
                                 $q->whereDate('estimate_date', '>=', $data['from'])
                             )
-                            ->when($data['to'], fn ($q) =>
+                            ->when(
+                                $data['to'],
+                                fn($q) =>
                                 $q->whereDate('estimate_date', '<=', $data['to'])
                             );
                     }),
+                SelectFilter::make('agent')
+                    ->label('Agent')
+                    ->relationship('customer.agent', 'name'),
             ])
 
             ->actions([
-                Action::make('edit')
-                    ->label('Edit')
-                    ->icon('heroicon-o-pencil-square')
-                    ->url(fn ($record) => route('estimates.custom.edit', $record->id)),
+                ActionGroup::make([
+                    Action::make('edit')
+                        ->label('Edit')
+                        ->icon('heroicon-o-pencil-square')
+                        ->url(fn($record) => route('estimates.custom.edit', $record->id)),
 
+                    Action::make('view_pdf')
+                        ->label('View PDF')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->url(fn($record) => route('estimates.custom.pdf', [$record->id, 'view']))
+                        ->openUrlInNewTab(),
 
-                DeleteAction::make(),
+                    Action::make('download_pdf')
+                        ->label('Download PDF')
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->url(fn($record) => route('estimates.custom.pdf', [$record->id, 'download']))
+                        ->openUrlInNewTab(),
+
+                    DeleteAction::make(),
+                ])
             ])
 
             ->toolbarActions([

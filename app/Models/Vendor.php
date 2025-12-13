@@ -14,5 +14,6 @@ class Vendor extends Model
         'mobile',
         'email',
         'address',
+        'gst_no',
     ];
 }

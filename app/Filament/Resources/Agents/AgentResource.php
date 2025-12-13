@@ -18,7 +18,7 @@ class AgentResource extends Resource
 {
     protected static ?string $model = Agent::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
 
     protected static ?string $recordTitleAttribute = 'name';
 

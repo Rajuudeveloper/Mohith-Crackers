@@ -31,6 +31,10 @@ class CustomersTable
                     ->label('Email address')
                     ->searchable(),
 
+                TextColumn::make('gst_no')
+                    ->label('GST No')
+                    ->searchable(),
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

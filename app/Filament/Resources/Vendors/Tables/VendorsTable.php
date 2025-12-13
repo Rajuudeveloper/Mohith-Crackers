@@ -24,6 +24,9 @@ class VendorsTable
 
                 TextColumn::make('email')
                     ->searchable(),
+                TextColumn::make('gst_no')
+                    ->label('GST No')
+                    ->searchable(),
 
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -51,6 +54,7 @@ class VendorsTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('id', 'desc');
     }
 }

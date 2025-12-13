@@ -20,6 +20,9 @@ class VendorForm
                     ->label('Email address')
                     ->email()
                     ->default(null),
+                TextInput::make('gst_no')
+                    ->label('GST No')
+                    ->default(null),
                 Textarea::make('address')
                     ->default(null)
                     ->columnSpanFull(),

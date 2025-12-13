@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('name');                 // Mandatory
             $table->string('email')->nullable();    // Optional
             $table->string('mobile')->nullable();   // Optional
+            $table->string('gst_no', 20)->nullable();
             $table->decimal('opening_balance', 15, 2)->default(0); // Optional
             $table->enum('cr_dr', ['Cr', 'Dr'])->default('Dr');    // Optional, default Cr
             $table->text('address')->nullable();    // Optional

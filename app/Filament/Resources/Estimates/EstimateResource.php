@@ -21,7 +21,7 @@ class EstimateResource extends Resource
 {
     protected static ?string $model = Estimate::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
     protected static ?string $recordTitleAttribute = 'Customer Name';
 

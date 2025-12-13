@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('name'); // Vendor Name - mandatory
             $table->string('mobile')->nullable();
             $table->string('email')->nullable();
+            $table->string('gst_no', 20)->nullable();
             $table->text('address')->nullable();
             $table->timestamps();
         });

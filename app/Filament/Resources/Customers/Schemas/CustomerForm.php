@@ -21,13 +21,16 @@ class CustomerForm
                     // ->relationship('agent', 'name')
                     ->options(Agent::orderBy('id', 'desc')->pluck('name', 'id')->toArray())
                     ->searchable()
-                    ->preload() 
+                    ->preload()
                     ->nullable(),
                 TextInput::make('mobile')
                     ->default(null),
                 TextInput::make('email')
                     ->label('Email address')
                     ->email()
+                    ->default(null),
+                TextInput::make('gst_no')
+                    ->label('GST No')
                     ->default(null),
                 Textarea::make('address')
                     ->default(null)

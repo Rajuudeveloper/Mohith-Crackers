@@ -25,6 +25,9 @@ class AgentsTable
 
                 TextColumn::make('mobile')
                     ->searchable(),
+                TextColumn::make('gst_no')
+                    ->label('GST No')
+                    ->searchable(),
 
                 TextColumn::make('opening_balance')
                     ->numeric()

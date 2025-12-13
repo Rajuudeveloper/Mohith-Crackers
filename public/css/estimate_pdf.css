@@ -1,0 +1,144 @@
+* {
+    /* margin: 0;
+    padding: 0;
+    box-sizing: border-box;  */
+}
+body {
+    font-family: 'DejaVu Sans', sans-serif;
+    font-size: 12px;
+    color: #000;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+}
+
+/* Header */
+.header {
+    width: 100%;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.company {
+    float: left;
+    width: 50%;
+}
+
+.invoice-info {
+    float: right;
+    width: 50%;
+    text-align: right;
+}
+
+.clearfix {
+    clear: both;
+}
+
+/* Customer section */
+.customer-details {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.customer-details table {
+    width: 100%;
+}
+
+.customer-details td {
+    padding: 3px 0;
+}
+
+/* Product table */
+table.products {
+    width: 100%;
+    border-collapse: collapse;
+    border-bottom: 1px solid #000;
+}
+
+table.products th {
+    border: 1px solid #000;
+    padding: 5px;
+    text-align: left;
+}
+table.products td{
+    border: 1px solid #000;
+    border-top: none;
+    border-bottom: none;
+    padding: 5px;
+    text-align: left;
+}
+
+table.products tbody tr:last-child td{
+    height: 350px;
+}
+
+table.products th {
+    background-color: #f0f0f0;
+}
+
+/* Totals */
+.totals {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.totals table {
+    width: 300px;
+    float: right;
+    border-collapse: collapse;
+    padding-top: 20px;
+}
+
+.totals td {
+    padding: 5px;
+}
+
+.totals .label {
+    text-align: left;
+}
+
+.totals .value {
+    text-align: right;
+}
+
+/* Footer */
+.footer {
+    width: 100%;
+    margin-top: 50px;
+}
+
+.signature {
+    float: right;
+    text-align: center;
+}
+
+.signature-line {
+    border-top: 1px solid #000;
+    width: 150px;
+    margin-top: 50px;
+}
+.bg_logo{
+    height: 80px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: -10;
+    opacity: 0.3;
+}
+.pdf_container{
+    position: relative;
+}
+.main_header{
+    text-align: center;
+}
+.main_header .header_logo{
+    height: 60px;
+}
+.main_header .header_2_logo{
+    height: 60px;
+}

@@ -20,7 +20,7 @@ class AgentCollectionResource extends Resource
 {
     protected static ?string $model = AgentCollection::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCurrencyRupee;
 
     protected static ?string $recordTitleAttribute = 'Agent Collections';
 
@@ -45,8 +45,6 @@ class AgentCollectionResource extends Resource
     {
         return [
             'index' => ListAgentCollections::route('/'),
-            'create' => CreateAgentCollection::route('/create'),
-            'edit' => EditAgentCollection::route('/{record}/edit'),
         ];
     }
 

@@ -14,5 +14,7 @@ class Product extends Model
         'description',
         'image',
         'packs_per_case',
+        'hsn_code',
+
     ];
 }

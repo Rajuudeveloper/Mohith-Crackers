@@ -10,10 +10,5 @@ class ListAgentCollections extends ListRecords
 {
     protected static string $resource = AgentCollectionResource::class;
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            CreateAction::make(),
-        ];
-    }
+   
 }

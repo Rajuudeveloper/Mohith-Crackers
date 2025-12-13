@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('estimate_items', function (Blueprint $table) {
-            $table->unsignedTinyInteger('tax_id')
-                ->default(0);
-            $table->decimal('tax_amt', 15, 2)
-                ->default(0);
+        Schema::table('estimates', function (Blueprint $table) {
+            $table->string('estimate_no');
+            $table->date('estimate_date');
         });
     }
 
@@ -24,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('estimate_items', function (Blueprint $table) {
-            $table->dropColumn(['tax_id', 'tax_amt']);
+        Schema::table('estimates', function (Blueprint $table) {
+            $table->string('estimate_no');
+            $table->date('estimate_date');
         });
     }
 };

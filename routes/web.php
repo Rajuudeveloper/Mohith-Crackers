@@ -24,4 +24,7 @@ Route::middleware(['web'])
 
         Route::post('/estimates/{estimate}/update', [EstimateController::class, 'update'])
             ->name('estimates.custom.update');
+
+        Route::get('/estimates/{estimate}/pdf/{mode?}', [EstimateController::class, 'pdf'])
+            ->name('estimates.custom.pdf');
     });

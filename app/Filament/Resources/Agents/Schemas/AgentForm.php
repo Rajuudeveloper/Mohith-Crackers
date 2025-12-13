@@ -22,6 +22,9 @@ class AgentForm
                 TextInput::make('mobile')
                     ->tel()
                     ->default(null),
+                TextInput::make('gst_no')
+                    ->label('GST No')
+                    ->default(null),
                 TextInput::make('opening_balance')
                     ->numeric()
                     ->default(0),

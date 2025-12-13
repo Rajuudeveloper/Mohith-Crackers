@@ -12,12 +12,8 @@ class EditAgentCollection extends EditRecord
 {
     protected static string $resource = AgentCollectionResource::class;
 
-    protected function getHeaderActions(): array
+    protected function getRedirectUrl(): string
     {
-        return [
-            DeleteAction::make(),
-            ForceDeleteAction::make(),
-            RestoreAction::make(),
-        ];
+        return $this->getResource()::getUrl('index');
     }
 }

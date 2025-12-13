@@ -23,9 +23,17 @@ class ProductsTable
                 TextColumn::make('uom_name')
                     ->searchable(),
 
+                TextColumn::make('packs_per_case')
+                    ->label('Packs')
+                    ->searchable(),
+
                 TextColumn::make('price')
-                    ->money()
+                    ->money('INR')
                     ->sortable(),
+
+                TextColumn::make('hsn_code')
+                    ->label('HSN Code')
+                    ->searchable(),
 
                 TextColumn::make('opening_stock')
                     ->numeric()

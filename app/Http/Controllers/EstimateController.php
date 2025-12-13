@@ -8,17 +8,58 @@ use App\Models\Product;
 use App\Models\EstimateItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class EstimateController extends Controller
 {
+    public function viewPdf(Estimate $estimate)
+    {
+        $pdf = Pdf::loadView('pdf.estimate', compact('estimate'));
+
+        return response($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="Estimate-' . $estimate->estimate_no . '.pdf"',
+        ]);
+    }
+    public function pdf(Estimate $estimate, $mode = 'view')
+    {
+        $html = view('pdf.estimate', [
+            'estimate' => $estimate,
+        ])->render();
+
+        // echo"<pre>";print_r($html);exit;
+       
+        $pdf = Pdf::loadHTML($html)->setPaper('a4', 'portrait');
+        $disposition = $mode === 'download' ? 'attachment': 'inline';
+        return response($pdf->output(), 200, [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => $disposition . '; filename="Estimate-' . $estimate->estimate_no . '.pdf"',
+        ]);
+    }
+
     public function create()
     {
         $customers = Customer::all();
         $products  = Product::all();
 
-        return view('estimates.create', compact('customers', 'products'));
+        $last = Estimate::latest('id')->first();
+
+        if (! $last || ! $last->estimate_no) {
+            $estimateNo = 'ES-1';
+        } else {
+            $number = (int) str_replace('ES-', '', $last->estimate_no);
+            $estimateNo = 'ES-' . ($number + 1);
+        }
+
+        $data = [
+            'customers' => $customers,
+            'products' => $products,
+            'estimateNo' => $estimateNo
+        ];
+
+
+        return view('estimates.create', $data);
     }
 
     public function store(Request $request)
@@ -117,8 +158,6 @@ class EstimateController extends Controller
             ], 500);
         }
     }
-
-
     public function update(Request $request, Estimate $estimate)
     {
         $data = $this->validateRequest($request);
@@ -202,8 +241,6 @@ class EstimateController extends Controller
             ], 500);
         }
     }
-
-
     public function edit(Estimate $estimate)
     {
         $customers = Customer::all();
