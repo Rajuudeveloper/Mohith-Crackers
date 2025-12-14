@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class AgentCollectionResource extends Resource
 {
     protected static ?string $model = AgentCollection::class;
-
+    protected static ?int $navigationSort = 6;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCurrencyRupee;
 
     protected static ?string $recordTitleAttribute = 'Agent Collections';

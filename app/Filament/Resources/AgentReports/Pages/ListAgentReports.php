@@ -9,11 +9,4 @@ use Filament\Resources\Pages\ListRecords;
 class ListAgentReports extends ListRecords
 {
     protected static string $resource = AgentReportResource::class;
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            CreateAction::make(),
-        ];
-    }
 }

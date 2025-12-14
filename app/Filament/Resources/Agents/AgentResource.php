@@ -17,7 +17,7 @@ use Filament\Tables\Table;
 class AgentResource extends Resource
 {
     protected static ?string $model = Agent::class;
-
+    protected static ?int $navigationSort = 4;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
 
     protected static ?string $recordTitleAttribute = 'name';

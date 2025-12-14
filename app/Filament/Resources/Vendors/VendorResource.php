@@ -18,6 +18,7 @@ class VendorResource extends Resource
 {
     protected static ?string $model = Vendor::class;
 
+    protected static ?int $navigationSort = 2;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingStorefront;
 
     protected static ?string $recordTitleAttribute = 'Name';

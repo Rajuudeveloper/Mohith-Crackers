@@ -116,5 +116,10 @@ return [
     */
 
     'system_route_prefix' => 'filament',
+    'brand' => [
+        'name' => env('APP_NAME', 'Mohidh Crackers'),
+        'logo' => null,
+        'favicon' => '/images/mo_logo.jpg',
+    ],
 
 ];

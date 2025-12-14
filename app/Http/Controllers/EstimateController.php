@@ -24,17 +24,19 @@ class EstimateController extends Controller
     }
     public function pdf(Estimate $estimate, $mode = 'view')
     {
-        $html = view('pdf.estimate', [
-            'estimate' => $estimate,
-        ])->render();
+        $estimate->load([
+            'customer',
+            'items.product'
+        ]);
+        $html = view('pdf.estimate', compact('estimate'))->render();
 
-        // echo"<pre>";print_r($html);exit;
-       
         $pdf = Pdf::loadHTML($html)->setPaper('a4', 'portrait');
-        $disposition = $mode === 'download' ? 'attachment': 'inline';
+
+        $disposition = $mode === 'download' ? 'attachment' : 'inline';
+
         return response($pdf->output(), 200, [
-            'Content-Type'        => 'application/pdf',
-            'Content-Disposition' => $disposition . '; filename="Estimate-' . $estimate->estimate_no . '.pdf"',
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => $disposition . '; filename=\"Estimate-' . $estimate->id . '.pdf\"',
         ]);
     }
 

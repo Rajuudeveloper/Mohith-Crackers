@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Builder;
 class EstimateResource extends Resource
 {
     protected static ?string $model = Estimate::class;
-
+        protected static ?int $navigationSort = 5;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
     protected static ?string $recordTitleAttribute = 'Customer Name';
