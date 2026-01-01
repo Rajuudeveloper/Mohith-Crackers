@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EstimateController;
+use App\Http\Controllers\AgentTransactionsController;
 
 
 Route::get('/', function () {
@@ -27,4 +28,8 @@ Route::middleware(['web'])
 
         Route::get('/estimates/{estimate}/pdf/{mode?}', [EstimateController::class, 'pdf'])
             ->name('estimates.custom.pdf');
+        Route::get('/agent-transactions', [AgentTransactionsController::class, 'index'])->name('reports.agenttransactions');
+        // In your routes/web.php
+        Route::get('/agent-transactions/pdf', [AgentTransactionsController::class, 'pdf'])
+            ->name('reports.agenttransactions.pdf');
     });

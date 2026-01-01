@@ -11,6 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('css/estimate.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
@@ -35,8 +36,8 @@
 
                 <div class="col-md-3 mb-2">
                     <label class="form-label">Estimate Date</label>
-                    <input type="date" id="estimateDate" class="form-control"
-                        value="{{ $estimate->estimate_date ?? date('Y-m-d') }}">
+                    <input type="text" id="estimateDate" name="estimate_date" class="form-control"
+                        value="{{ isset($estimate) ? \Carbon\Carbon::parse($estimate->estimate_date)->format('d-m-Y') : now()->format('d-m-Y') }}">
                 </div>
 
                 <div class="col-md-3 mb-2">
@@ -137,13 +138,13 @@
 
                 <!-- INPUT ROW -->
                 <div class="row g-3">
-                    <div class="col-md-3 col-6">
+                    <div class="col-md-2 col-6">
                         <label class="form-label text-light">Sub Total</label>
                         <input type="text" id="subTotal" class="form-control text-end fw-bold" readonly
                             value="0.00">
                     </div>
 
-                    <div class="col-md-3 col-6">
+                    <div class="col-md-2 col-6">
                         <label class="form-label text-light">Tax %</label>
                         <select id="tax_id" class="form-select">
                             <option value="">-- Select --</option>
@@ -156,18 +157,25 @@
                         </select>
                     </div>
 
-                    <div class="col-md-3 col-6">
+                    <div class="col-md-2 col-6">
                         <label class="form-label text-light">Tax Amount</label>
                         <input type="number" id="tax_amt" class="form-control text-end"
-                            value="{{ $estimate->tax_amt ?? 0 }}" step="0.01">
+                            value="{{ $estimate->tax_amt ?? 0 }}" step="1">
                         <small class="text-secondary">Editable</small>
                     </div>
 
-                    <div class="col-md-3 col-6">
+                    <div class="col-md-2 col-6">
                         <label class="form-label text-light">Packing (%)</label>
                         <input type="number" id="packingPercent" class="form-control text-end"
-                            value="{{ $estimate->packing_percent ?? 0 }}" step="0.01">
+                            value="{{ $estimate->packing_percent ?? 0 }}" step="1">
                     </div>
+                    <div class="col-md-2 col-6">
+    <label class="form-label text-light">Commission (-5%)</label>
+    <input type="number" id="commission" class="form-control text-end"
+        value="{{ $estimate->commission ?? 0 }}" step="0.01">
+    <!-- Optional: Add a small note about auto calculation -->
+    <small class="text-muted">Auto-calculates 5% of Grand Total. Edit to override.</small>
+</div>
                 </div>
 
                 <!-- CALCULATED VALUES -->

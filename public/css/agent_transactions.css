@@ -1,0 +1,537 @@
+:root {
+    --primary-color: #3f51b5;
+    --primary-dark: #303f9f;
+    --dark-bg: #121212;
+    --dark-surface: #1e1e1e;
+    --dark-surface-variant: #2d2d2d;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --border-color: #404040;
+    --success-color: #4caf50;
+    --warning-color: #ff9800;
+    --danger-color: #f44336;
+}
+
+/* Pagination Styles */
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    gap: 8px;
+    margin-top: 24px;
+    justify-content: center;
+}
+
+.pagination .page-item {
+    margin: 0;
+}
+
+.pagination .page-link {
+    background-color: var(--dark-surface-variant);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    min-width: 40px;
+    text-align: center;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination .page-link:hover {
+    background-color: var(--dark-surface);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.pagination .page-item.active .page-link:hover {
+    background-color: var(--primary-dark);
+    color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: var(--dark-surface);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.pagination .page-link i {
+    font-size: 12px;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.card {
+    background: var(--dark-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background: var(--dark-surface-variant);
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: 10px 10px 0 0;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* Filter Section */
+.filter-section {
+    background: var(--dark-surface-variant);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border-color);
+}
+
+.filter-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    align-items: end;
+}
+
+.filter-group {
+    margin-bottom: 0;
+}
+
+.filter-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.form-select,
+.form-control {
+    background: var(--dark-surface);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 6px;
+    padding: 10px 12px;
+    width: 100%;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.form-select:focus,
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+    background: var(--dark-surface);
+    color: var(--text-primary);
+}
+
+.form-select option {
+    background: var(--dark-surface);
+    color: var(--text-primary);
+}
+
+.date-inputs {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.date-inputs .form-control {
+    min-width: 150px;
+}
+
+.date-separator {
+    color: var(--text-secondary);
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: var(--dark-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--dark-surface-variant);
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Table Styles */
+.table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.table {
+    margin-bottom: 0;
+    color: var(--text-primary);
+}
+
+.table thead th {
+    background: var(--dark-surface-variant);
+    border-bottom: 2px solid var(--border-color);
+    padding: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-top: none;
+}
+
+.table tbody td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+    background: rgba(63, 81, 181, 0.05);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Status Badges */
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge-success {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--success-color);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.badge-warning {
+    background: rgba(255, 152, 0, 0.1);
+    color: var(--warning-color);
+    border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.badge-danger {
+    background: rgba(244, 67, 54, 0.1);
+    color: var(--danger-color);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+.badge-info {
+    background: rgba(33, 150, 243, 0.1);
+    color: #2196f3;
+    border: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 24px;
+    justify-content: center;
+}
+
+.page-link {
+    background-color: var(--dark-surface-variant);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.page-link:hover {
+    background-color: var(--dark-surface);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.page-item.disabled .page-link {
+    background-color: var(--dark-surface);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+/* Stats */
+.stats-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-top: 1px solid var(--border-color);
+    margin-top: 20px;
+}
+
+.stats-item {
+    text-align: center;
+}
+
+.stats-value {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.stats-value.positive {
+    color: var(--success-color);
+}
+
+.stats-value.negative {
+    color: var(--danger-color);
+}
+
+.stats-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-icon {
+    font-size: 64px;
+    color: var(--text-secondary);
+    opacity: 0.3;
+    margin-bottom: 20px;
+}
+
+.empty-text {
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+/* Type colors */
+.type-estimate {
+    color: var(--warning-color);
+}
+
+.type-collection {
+    color: var(--success-color);
+}
+
+/* Payment mode badge */
+.payment-mode-badge {
+    background: rgba(63, 81, 181, 0.1);
+    color: var(--primary-color);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: inline-block;
+}
+
+/* Select2 Dark Theme Customization */
+/* Select2 Dark Theme */
+.select2-container--default .select2-selection--single {
+    background-color: var(--dark-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 6px !important;
+    height: 42px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: var(--text-primary) !important;
+    line-height: 40px !important;
+    padding-left: 12px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 40px !important;
+}
+
+.select2-container--default .select2-dropdown {
+    background-color: var(--dark-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 6px !important;
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    background-color: var(--dark-surface-variant) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    border-radius: 4px !important;
+}
+
+.select2-container--default .select2-results__option {
+    background-color: var(--dark-surface) !important;
+    color: var(--text-primary) !important;
+    padding: 8px 12px !important;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+.select2-container--default .select2-results__option[aria-selected=true] {
+    background-color: var(--dark-surface-variant) !important;
+    color: var(--text-primary) !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: var(--text-secondary) !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__clear {
+    color: var(--text-secondary) !important;
+    margin-right: 30px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__clear:hover {
+    color: var(--danger-color) !important;
+}
+
+/* Make sure the dropdown appears above other elements */
+.select2-container--open .select2-dropdown--below {
+    margin-top: 4px !important;
+}
+
+.select2-container--open .select2-dropdown--above {
+    margin-bottom: 4px !important;
+}
+
+/* Date Range Picker Dark Theme */
+.daterangepicker {
+    background-color: var(--dark-surface) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.daterangepicker .calendar-table {
+    background-color: var(--dark-surface) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.daterangepicker .calendar-table th,
+.daterangepicker .calendar-table td {
+    color: var(--text-primary) !important;
+}
+
+.daterangepicker td.off,
+.daterangepicker td.off.in-range,
+.daterangepicker td.off.start-date,
+.daterangepicker td.off.end-date {
+    background-color: var(--dark-surface-variant) !important;
+    color: var(--text-secondary) !important;
+}
+
+.daterangepicker td.active,
+.daterangepicker td.active:hover {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+.daterangepicker .ranges li {
+    background-color: var(--dark-surface-variant) !important;
+    color: var(--text-primary) !important;
+}
+
+.daterangepicker .ranges li.active,
+.daterangepicker .ranges li:hover {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+.daterangepicker .drp-buttons {
+    border-top: 1px solid var(--border-color) !important;
+}
+
+.daterangepicker .drp-selected {
+    color: var(--text-primary) !important;
+}
+
+.daterangepicker .calendar-table .next span,
+.daterangepicker .calendar-table .prev span {
+    border-color: var(--text-primary) !important;
+}
+
+/* Adjust filter row for new layout */
+.filter-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    align-items: end;
+}
+
+.date-inputs {
+    position: relative;
+}
+
+.date-inputs .form-control {
+    min-width: 100%;
+    cursor: pointer;
+}
+
+/* Remove the old separator since we're using a single input */
+.date-separator {
+    display: none;
+}

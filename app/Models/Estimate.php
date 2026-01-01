@@ -17,7 +17,8 @@ class Estimate extends Model
         'estimate_date',
         'estimate_no',
         'is_round_off',
-        'round_off_amount'
+        'round_off_amount',
+        'commission',
     ];
 
     protected $casts = [
@@ -25,6 +26,7 @@ class Estimate extends Model
         'tax' => 'decimal:2',
         'packing_charges' => 'decimal:2',
         'grand_total' => 'decimal:2',
+        'commission' => 'decimal:2',
     ];
 
     public function customer(): BelongsTo

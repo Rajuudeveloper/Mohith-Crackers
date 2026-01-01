@@ -1,39 +1,40 @@
 <!-- scripts -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     $(function() {
-        // CSRF for AJAX (if later used)
+        flatpickr("#estimateDate", {
+            dateFormat: "d-m-Y",
+            altInput: true,
+            altFormat: "d-m-Y"
+        });
+        
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
 
-        // init select2 for customer & existing product selects
         $('#customer').select2({
             placeholder: 'Select customer...',
             allowClear: true,
             width: 'resolve'
         });
 
-        // products list from server
         const products = @json($products);
-
-        // flag to track whether tax_amt was manually edited by user
         let taxAmtManuallyEdited = false;
+        
+        // Flag to track if commission was manually edited
+        let commissionManuallyEdited = false;
 
-        // helper to build product options (string)
         function buildProductOptions(selectedId = null) {
             return products.map(p => {
                 const selected = selectedId && selectedId == p.id ? 'selected' : '';
-                // escape name is not necessary because blade json already safe; but we output as-is
                 return `<option value="${p.id}" ${selected} data-packs="${p.packs_per_case}" data-uom="${p.uom_name}" data-price="${p.price}">${p.name}</option>`;
             }).join('');
         }
 
-        // add line item (for new rows)
         function addLineItem(selectedId = null, caseVal = 1, priceVal = '', packsVal = '', qtyVal = '') {
             const productOptions = '<option></option>' + buildProductOptions(selectedId);
             const $row = $(`
@@ -56,7 +57,6 @@
                 </td>
                 </tr>
             `);
-            // append and init select2 on the product select
             $('#lineItemsTable tbody').append($row);
             $row.find('.productSelect').select2({
                 placeholder: 'Select product...',
@@ -64,17 +64,14 @@
                 width: 'resolve'
             });
 
-            // If selectedId provided, trigger update to populate packs/qty/price
             if (selectedId) {
-                updateLineItem($row, true); // set price from product if empty
+                updateLineItem($row, true);
             } else {
-                // new rows: if product default selected via options, leave empty until selection or set defaults
                 updateLineItem($row, false);
             }
             recalcAll();
         }
 
-        // update single row (set packs, qty, uom, set price only when requested)
         function updateLineItem($row, setPriceIfEmpty = false) {
             const $select = $row.find('.productSelect');
             const $selectedOption = $select.find('option:selected');
@@ -91,7 +88,6 @@
 
             const $priceInput = $row.find('.priceInput');
             if (!$priceInput.val() || setPriceIfEmpty) {
-                // set default price (rounded to 2 decimals)
                 $priceInput.val(defaultPrice ? defaultPrice.toFixed(2) : '');
             }
 
@@ -100,82 +96,98 @@
             $row.find('.lineTotal').text(lineTotal.toFixed(2));
         }
 
-        // recalc totals (subtotal, packing amount, tax, grand total, roundoff)
         function recalcAll() {
-            // update each row totals first
+            // Update each row totals first
             $('#lineItemsTable tbody tr').each(function() {
-                updateLineItem($(this), false); // do not overwrite user-edited price
+                updateLineItem($(this), false);
             });
 
-            // sub total = sum of lineTotals
+            // Calculate sub total
             let subTotal = 0;
             $('#lineItemsTable tbody tr').each(function() {
                 subTotal += parseFloat($(this).find('.lineTotal').text()) || 0;
             });
 
-            // packing percent -> packing amount
+            // Packing amount
             const packingPercent = parseFloat($('#packingPercent').val()) || 0;
             const packingAmount = (subTotal * packingPercent) / 100;
 
-            // tax: use value from tax_amt input (which may be auto-set from dropdown or manually edited)
+            // Tax amount
             const taxAmt = parseFloat($('#tax_amt').val()) || 0;
 
-            // compute preliminary grand
-            let grand = subTotal + packingAmount + taxAmt;
+            // Calculate pre-commission total
+            let preCommissionTotal = subTotal + packingAmount + taxAmt;
 
-            // round off handling
+            // Round off handling (before commission)
             let roundOffAmount = 0;
             if ($('#roundOffCheck').is(':checked')) {
-                const rounded = Math.round(grand);
-                roundOffAmount = rounded - grand;
-                grand = rounded;
+                const rounded = Math.round(preCommissionTotal);
+                roundOffAmount = rounded - preCommissionTotal;
+                preCommissionTotal = rounded;
             }
 
-            // update UI
+            // COMMISSION CALCULATION
+            let commission = 0;
+            
+            // Check if commission was manually edited
+            const commissionInputVal = $('#commission').val();
+            const commissionInput = parseFloat(commissionInputVal) || 0;
+            
+            if (commissionManuallyEdited) {
+                // Use manually entered value
+                commission = commissionInput;
+            } else {
+                // Calculate default 5% commission from preCommissionTotal
+                commission = (preCommissionTotal * 5) / 100;
+                
+                // Round commission to 2 decimal places
+                commission = Math.round(commission * 100) / 100;
+                
+                // Update the commission input field with calculated value
+                $('#commission').val(commission.toFixed(2));
+            }
+
+            // Calculate final Grand Total (after commission deduction)
+            let grandTotal = preCommissionTotal - commission;
+
+            // Update all UI elements
             $('#subTotal').val(subTotal.toFixed(2));
             $('#packingAmount').text(packingAmount.toFixed(2));
             $('#taxAmountDisplay').text(taxAmt.toFixed(2));
             $('#roundOffAmount').text((roundOffAmount >= 0 ? '+' : '') + roundOffAmount.toFixed(2));
-            $('#grandTotal').text(grand.toFixed(2));
+            // $('#commissionDisplay').text(commission.toFixed(2)); // Optional: You can add a display span
+            $('#grandTotal').text(grandTotal.toFixed(2));
         }
 
-        // --- events ---
-
-        // product change: populate packs, qty, set default price (overwrite)
+        // --- Existing Events ---
         $(document).on('change', '.productSelect', function() {
             const $row = $(this).closest('tr');
-            updateLineItem($row, true); // set price from product master
+            updateLineItem($row, true);
             recalcAll();
         });
 
-        // case, price changes -> recalc
         $(document).on('input change', '.caseInput, .priceInput', function() {
-            // do not override price (user can type)
             recalcAll();
         });
 
-        // add row
         $('#addLineItem').on('click', function() {
             addLineItem();
         });
 
-        // remove row
         $(document).on('click', '.removeLineItem', function() {
             $(this).closest('tr').remove();
             recalcAll();
         });
 
-        // TAX dropdown: when changed, auto-calc tax_amt from subtotal unless user later edits tax_amt
         $('#tax_id').on('change', function() {
             const pct = parseFloat($(this).val());
             const sub = parseFloat($('#subTotal').val()) || 0;
             if (!isNaN(pct)) {
                 const calculated = (sub * pct) / 100;
                 $('#tax_amt').val(calculated.toFixed(2));
-                taxAmtManuallyEdited = false; // mark as auto
+                taxAmtManuallyEdited = false;
                 recalcAll();
             } else {
-                // if blank selected, do nothing; user may manually set tax_amt
                 if (!taxAmtManuallyEdited) {
                     $('#tax_amt').val((0).toFixed(2));
                     recalcAll();
@@ -183,23 +195,36 @@
             }
         });
 
-        // tax amount manual override: set flag
         $('#tax_amt').on('input change', function() {
             taxAmtManuallyEdited = true;
             recalcAll();
         });
 
-        // packing percent change
         $('#packingPercent').on('input change', function() {
             recalcAll();
         });
 
-        // round off toggle
         $('#roundOffCheck').on('change', function() {
             recalcAll();
         });
 
-        // initialize existing rows (edit mode)
+        // --- NEW: Commission Events ---
+        $('#commission').on('input change', function() {
+            // When user types in commission field, mark it as manually edited
+            commissionManuallyEdited = true;
+            recalcAll();
+        });
+
+        // Reset commission to auto-calc when field is cleared
+        $('#commission').on('blur', function() {
+            if ($(this).val() === '' || $(this).val() === '0') {
+                // If user clears the field or sets to 0, revert to auto calculation
+                commissionManuallyEdited = false;
+                recalcAll();
+            }
+        });
+
+        // Initialize existing rows
         $('#lineItemsTable tbody tr').each(function() {
             const $row = $(this);
             $row.find('.productSelect').select2({
@@ -208,20 +233,26 @@
                 width: 'resolve'
             });
 
-            // set initial packs/qty/price based on selected product (but keep existing price value if present)
-            // If price input is empty, set from product
             const priceInputVal = $row.find('.priceInput').val();
-            updateLineItem($row, !priceInputVal); // setPriceIfEmpty = true only if priceInput empty
+            updateLineItem($row, !priceInputVal);
         });
-        // initial totals
+        
+        // Initialize commission (set to auto-calc mode on page load)
+        // If there's existing commission value from database, mark as manually edited
+        const initialCommission = $('#commission').val();
+        if (initialCommission && initialCommission !== '0') {
+            commissionManuallyEdited = true;
+        }
+        
+        // Initial calculation
         recalcAll();
 
-        // ----- AJAX submit (store/update) -----
+        // ----- AJAX submit (updated with commission) -----
         $('#estimateForm').on('submit', function(e) {
             e.preventDefault();
             $('#saveBtn').prop('disabled', true);
 
-            // Build payload
+            // Build payload with commission
             const payload = {
                 estimate_no: $('#estimateNo').val(),
                 estimate_date: $('#estimateDate').val(),
@@ -231,13 +262,14 @@
                 tax_amt: parseFloat($('#tax_amt').val()) || 0,
                 packing_percent: parseFloat($('#packingPercent').val()) || 0,
                 packing_amount: parseFloat($('#packingAmount').text()) || 0,
+                commission: parseFloat($('#commission').val()) || 0, // Add commission to payload
                 is_round_off: $('#roundOffCheck').is(':checked') ? 1 : 0,
                 round_off_amount: parseFloat($('#roundOffAmount').text()) || 0,
                 grand_total: parseFloat($('#grandTotal').text()) || 0,
                 line_items: []
             };
 
-            // collect line items
+            // Collect line items
             $('#lineItemsTable tbody tr').each(function() {
                 const $r = $(this);
                 payload.line_items.push({
@@ -254,12 +286,10 @@
             const estimateId = $('#estimateId').val();
             let url, method;
             if (estimateId) {
-                // update route you used earlier
                 url = "{{ url('/') }}" + `/admin/custom/estimates/${estimateId}/update`;
-                method =
-                    'POST'; // you said you used POST update; change to PUT if your route expects PUT
+                method = 'POST';
             } else {
-                url = "{{ route('estimates.custom.store') }}"; // keep your custom store route
+                url = "{{ route('estimates.custom.store') }}";
                 method = 'POST';
             }
 
@@ -272,7 +302,6 @@
             }).done(function(res) {
                 $('#saveBtn').prop('disabled', false);
                 if (res.success && res.estimate_id) {
-                    // redirect to edit page after create
                     window.location.href = "{{ url('admin/estimates') }}";
                 } else if (res.success) {
                     alert('Saved successfully');
@@ -290,6 +319,5 @@
                 }
             });
         });
-
-    }); // end doc ready
+    });
 </script>

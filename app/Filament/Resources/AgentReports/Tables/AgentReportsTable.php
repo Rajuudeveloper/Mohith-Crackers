@@ -47,10 +47,30 @@ class AgentReportsTable
 
     protected static function getQuery(): Builder
     {
+        // Subquery for total estimates per agent
+        $estimatesSubquery = DB::table('customers')
+            ->join('estimates', 'estimates.customer_id', '=', 'customers.id')
+            ->select(
+                'customers.agent_id',
+                DB::raw('COALESCE(SUM(estimates.grand_total), 0) as total_estimate')
+            )
+            ->groupBy('customers.agent_id');
+
+        // Subquery for total collections per agent
+        $collectionsSubquery = DB::table('agent_collections')
+            ->select(
+                'agent_id',
+                DB::raw('COALESCE(SUM(amount), 0) as total_received')
+            )
+            ->groupBy('agent_id');
+
         return Agent::query()
-            ->leftJoin('customers', 'customers.agent_id', '=', 'agents.id')
-            ->leftJoin('estimates', 'estimates.customer_id', '=', 'customers.id')
-            ->leftJoin('agent_collections', 'agent_collections.agent_id', '=', 'agents.id')
+            ->leftJoinSub($estimatesSubquery, 'est', function ($join) {
+                $join->on('agents.id', '=', 'est.agent_id');
+            })
+            ->leftJoinSub($collectionsSubquery, 'col', function ($join) {
+                $join->on('agents.id', '=', 'col.agent_id');
+            })
             ->select([
                 'agents.id',
                 'agents.name',
@@ -58,10 +78,10 @@ class AgentReportsTable
                 'agents.cr_dr',
 
                 // Total Estimate
-                DB::raw('COALESCE(SUM(DISTINCT estimates.grand_total), 0) AS total_estimate'),
+                DB::raw('COALESCE(est.total_estimate, 0) AS total_estimate'),
 
                 // Total Received
-                DB::raw('COALESCE(SUM(DISTINCT agent_collections.amount), 0) AS total_received'),
+                DB::raw('COALESCE(col.total_received, 0) AS total_received'),
 
                 // Opening Balance display (UI only)
                 DB::raw("
@@ -75,25 +95,17 @@ class AgentReportsTable
 
                 // FINAL Balance Calculation
                 DB::raw("
-            (
                 (
-                    COALESCE(SUM(DISTINCT estimates.grand_total), 0)
+                    COALESCE(est.total_estimate, 0)
                     + CASE
                         WHEN agents.cr_dr = 'Dr'
                             THEN agents.opening_balance
                         ELSE
                             -agents.opening_balance
                       END
-                )
-                - COALESCE(SUM(DISTINCT agent_collections.amount), 0)
-            ) AS balance_amount
+                    - COALESCE(col.total_received, 0)
+                ) AS balance_amount
             "),
-            ])
-            ->groupBy(
-                'agents.id',
-                'agents.name',
-                'agents.opening_balance',
-                'agents.cr_dr'
-            );
+            ]);
     }
 }

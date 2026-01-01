@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class EstimateController extends Controller
 {
@@ -72,7 +73,10 @@ class EstimateController extends Controller
         try {
             $estimate = new Estimate();
             $estimate->customer_id = $data['customer_id'];
-            $estimate->estimate_date = $data['estimate_date'] ?? now()->toDateString();
+            $estimate->estimate_date = Carbon::createFromFormat(
+                'd-m-Y',
+                $request->estimate_date
+            )->format('Y-m-d');
             $estimate->estimate_no = $data['estimate_no'] ?? null;
 
             $estimate->sub_total = 0;
@@ -167,7 +171,10 @@ class EstimateController extends Controller
         DB::beginTransaction();
         try {
             $estimate->customer_id   = $data['customer_id'];
-            $estimate->estimate_date = $data['estimate_date'] ?? $estimate->estimate_date;
+            $estimate->estimate_date = Carbon::createFromFormat(
+                'd-m-Y',
+                $request->estimate_date
+            )->format('Y-m-d') ?? $estimate->estimate_date;
             $estimate->estimate_no   = $data['estimate_no'] ?? $estimate->estimate_no;
             $estimate->save();
 
